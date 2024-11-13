@@ -1,4 +1,6 @@
 const User = require('../models/user.model')
+const UserInfo = require('../models/user-info.model')
+const useragent = require("useragent");
 const bcrypt = require('bcryptjs')
 const moment = require('moment');
 
@@ -52,13 +54,13 @@ exports.register = async (req, res) => {
         });
 
         // Remove the password field before sending the response
-        const user= newUser.toObject();
+        const user = newUser.toObject();
         delete user.password;
 
         // res.status(201).json({ data: { user: userWithoutPassword } });
         console.log(user);
         res.redirect("/login");
-        
+
     } catch (error) {
         console.error('Error registering user:', error);
         req.flash('error', 'Please try again');
@@ -94,12 +96,33 @@ exports.login = async (req, res) => {
 
         // Store user session details
         req.session.userId = user._id;
-   
+
+        // Capture user agent details
+        const agent = useragent.parse(req.headers['user-agent']);
+        const newSession = new UserInfo({
+            userId: user._id,
+            browserId: req.sessionID, // Using session ID as Browser ID
+            browser: agent.toAgent(),  // Example: "Chrome 93.0.4577.63"
+            os: agent.os.toString(),   // Example: "Windows 10"
+            lastActiveOn: moment().format('MMMM Do YYYY, h:mm:ss a')
+        });
+
+        await newSession.save();
+
         // Redirect to the dashboard 
-        res.redirect('/dashboard');
+        res.redirect('/user-info');
     } catch (error) {
-        console.error('Error logging in:', error);
-        req.flash('error', 'Please try again');
+        console.error('Invalid email or password', error);
+        req.flash('error', 'Invalid email or password');
         return res.redirect('/login');
     }
 };
+
+
+
+// Get Logout 
+exports.logoutUser = (req, res) => {
+    req.session.destroy(() => {
+        res.redirect("/login");
+    });
+}

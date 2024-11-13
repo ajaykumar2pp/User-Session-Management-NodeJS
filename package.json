@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js -e js, ejs"
   },
   "keywords": [],
   "author": "Ajay Kumar",
@@ -20,6 +20,7 @@
     "express-flash": "^0.0.2",
     "express-session": "^1.18.1",
     "moment": "^2.30.1",
-    "mongoose": "^8.8.1"
+    "mongoose": "^8.8.1",
+    "useragent": "^2.3.0"
   }
 }
