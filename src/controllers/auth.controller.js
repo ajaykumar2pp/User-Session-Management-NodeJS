@@ -14,11 +14,6 @@ exports.loginPage = (req, res) => {
     res.render('auth/login')
 }
 
-// Dashboard Page GET METHOD
-exports.dashboardPage = (req, res) => {
-    res.render('pages/dashboard')
-}
-
 
 // Register POST METHOD
 exports.register = async (req, res) => {
@@ -101,16 +96,16 @@ exports.login = async (req, res) => {
         const agent = useragent.parse(req.headers['user-agent']);
         const newSession = new UserInfo({
             userId: user._id,
-            browserId: req.sessionID, // Using session ID as Browser ID
-            browser: agent.toAgent(),  // Example: "Chrome 93.0.4577.63"
-            os: agent.os.toString(),   // Example: "Windows 10"
+            browserId: req.sessionID, 
+            browser: agent.toAgent(),  
+            os: agent.os.toString(),  
             lastActiveOn: moment().format('MMMM Do YYYY, h:mm:ss a')
         });
 
         await newSession.save();
 
         // Redirect to the dashboard 
-        res.redirect('/user-info');
+        res.redirect('/home');
     } catch (error) {
         console.error('Invalid email or password', error);
         req.flash('error', 'Invalid email or password');

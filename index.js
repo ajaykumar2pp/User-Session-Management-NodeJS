@@ -46,7 +46,7 @@ app.use(flash())
 
 
 app.use((req, res, next) => {
-    console.log("User ID:", req.session.userId); // Logs the user ID for every request
+    console.log("User ID:", req.session); // Logs the user ID for every request
     next();
 });
 
