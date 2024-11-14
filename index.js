@@ -5,7 +5,7 @@ const flash = require('express-flash')
 const MongoStore = require('connect-mongo');
 const { ConnectDB } = require("./src/config/db.config")
 const authRoutes = require("./src/routes/authRoutes")
-const userInfoRoutes = require("./src/routes/userInfoRoutes")
+const userInfoRoutes = require("./src/routes/user-InfoRoutes")
 
 // Initialize Express app
 const app = express();
@@ -47,6 +47,7 @@ app.use(flash())
 
 app.use((req, res, next) => {
     console.log("User ID:", req.session); // Logs the user ID for every request
+    req.flash('error', 'Session expired! ');
     next();
 });
 
@@ -59,6 +60,11 @@ app.get('/', (req, res) => {
 // ********  Route Setup ***********//
 app.use('/', authRoutes);
 app.use('/', userInfoRoutes);
+
+//*****   404 Error Handling   *******/ 
+app.use((req, res) => {
+    res.status(404).render('errors/404', { title: 'Page Not Found' })
+})
 
 
 

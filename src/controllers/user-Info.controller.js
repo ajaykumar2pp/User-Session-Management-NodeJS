@@ -6,6 +6,11 @@ exports.dashboardPage = (req, res) => {
     res.render('pages/dashboard')
 }
 
+// My Course Page GET METHOD
+exports.myCoursePage = (req, res) => {
+  res.render('pages/my-course')
+}
+
 // User Account Info
 exports.userInfo = async(req,res)=>{
     try {
