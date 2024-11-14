@@ -96,9 +96,9 @@ exports.login = async (req, res) => {
         const agent = useragent.parse(req.headers['user-agent']);
         const newSession = new UserInfo({
             userId: user._id,
-            browserId: req.sessionID, 
-            browser: agent.toAgent(),  
-            os: agent.os.toString(),  
+            browserId: req.sessionID,
+            browser: agent.toAgent(),
+            os: agent.os.toString(),
             lastActiveOn: moment().format('MMMM Do YYYY, h:mm:ss a')
         });
 
@@ -117,7 +117,18 @@ exports.login = async (req, res) => {
 
 // Get Logout 
 exports.logoutUser = (req, res) => {
-    req.session.destroy(() => {
-        res.redirect("/login");
+    req.session.destroy((err) => {
+        if (err) {
+            console.log(err);
+        } else {
+            MongoStore.remove(req.sessionID, (err) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.redirect('/login');
+                }
+            });
+        }
     });
+
 }

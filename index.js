@@ -31,11 +31,15 @@ ConnectDB();
 app.use(session({
     secret: process.env.SECRET_KEY,
     resave: false,
-    saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: process.env.DATABASE_URL, collection: 'sessions' }),
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.DATABASE_URL,
+        collection: 'sessions'
+    }),
     cookie: {
         secure: false,    // Set to true if using HTTPS
-        maxAge: 24 * 60 * 1000  // 1 minutes
+        maxAge: 24 * 60 * 60 * 1000 // 1 day
+        // maxAge: 24 * 60 * 1000  // 1 minutes
         // maxAge: 30 * 60 * 1000  // 30 minutes
     }
 }));
@@ -47,7 +51,7 @@ app.use(flash())
 
 app.use((req, res, next) => {
     console.log("User ID:", req.session); // Logs the user ID for every request
-    req.flash('error', 'Session expired! ');
+    // req.flash('error', 'Session expired! ');
     next();
 });
 
